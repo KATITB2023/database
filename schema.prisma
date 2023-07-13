@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["metrics", "tracing"]
@@ -9,25 +6,70 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MENTOR
+  STUDENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Campus {
+  GANESHA
+  JATINANGOR
 }
 
 model User {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nim          String   @unique
   passwordHash String
-  role         UserRole @default(USER)
-  createdAt    DateTime @unique @default(now()) // Unique for cursor pagination
-  updatedAt    DateTime @unique @default(now()) @updatedAt // Unique for cursor pagination
-  version      Int      @default(0) // Comment this line if you don't want optimistic concurrency control
-  isDeleted    Boolean  @default(false) // Comment this line if you don't want soft delete
+  role         UserRole @default(STUDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  profile      Profile?
+
+  friendInitiated Friendship[] @relation("initiator")
+  friendReceived  Friendship[] @relation("receiver")
 
   sentMessages     Message[] @relation("sender")
   receivedMessages Message[] @relation("receiver")
+
+  @@unique([createdAt, id]) // Unique for cursor pagination
+}
+
+model Profile {
+  userId       String  @id @db.Uuid
+  user         User    @relation(fields: [userId], references: [id])
+  name         String
+  pin          String  @unique @db.Char(6)
+  faculty      String? @db.VarChar(50)
+  gender       Gender?
+  campus       Campus?
+  email        String? @unique
+  image        String?
+  bio          String  @default("")
+  instagram    String?
+  visitedCount Int     @default(0)
+  friendCount  Int     @default(0)
+
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Friendship {
+  userInitiatorId String   @db.Uuid
+  userInitiator   User     @relation("initiator", fields: [userInitiatorId], references: [id])
+  userReceiverId  String   @db.Uuid
+  userReceiver    User     @relation("receiver", fields: [userReceiverId], references: [id])
+  createdAt       DateTime @default(now())
+  accepted        Boolean  @default(false)
+
+  @@id([userInitiatorId, userReceiverId])
 }
 
 model Message {
@@ -37,10 +79,7 @@ model Message {
   receiverId String   @db.Uuid
   receiver   User     @relation("receiver", fields: [receiverId], references: [id])
   message    String
-  createdAt  DateTime @unique @default(now()) // Unique for cursor pagination
-}
+  createdAt  DateTime @default(now())
 
-enum UserRole {
-  ADMIN
-  USER
+  @@unique([createdAt, id]) // Unique for cursor pagination
 }
