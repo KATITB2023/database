@@ -23,6 +23,7 @@ enum Gender {
 enum Campus {
   GANESHA
   JATINANGOR
+  CIREBON
 }
 
 model User {
