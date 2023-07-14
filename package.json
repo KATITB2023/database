@@ -2,8 +2,6 @@
   "name": "@katitb2023/database",
   "version": "1.0.0",
   "description": "",
-  "main": "client/index.js",
-  "types": "client/index.d.ts",
   "scripts": {
     "migrate-dev": "prisma migrate dev",
     "migrate-deploy": "prisma migrate deploy",
@@ -12,18 +10,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "dotenv-cli": "^7.2.1",
-    "prisma": "^5.0.0",
-    "@prisma/client": "^5.0.0"
+    "@prisma/client": "4.15.0",
+    "prisma": "4.15.0",
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@prisma/client": "*",
-    "prisma": "*"
+    "@prisma/client": "4.15.0",
+    "prisma": "4.15.0"
   },
-  "files": [
-    "client/index.js",
-    "client/index.d.ts",
-    "schema.prisma"
-  ]
+  "prisma": {
+    "schema": "./schema.prisma"
+  }
 }
