@@ -93,3 +93,10 @@ model Message {
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
+
+// Ini playgroundnya obus
+model Articles {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text         String
+  embeddings   Float[]
+}
