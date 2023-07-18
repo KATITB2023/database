@@ -98,5 +98,6 @@ model Message {
 model Articles {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   text         String
+  keywords     String[]
   embeddings   Float[]
 }
