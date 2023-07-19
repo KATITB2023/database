@@ -26,6 +26,14 @@ enum Campus {
   CIREBON
 }
 
+enum Status {
+  HADIR
+  TIDAK_HADIR
+  IZIN_DITERIMA
+  IZIN_PENDING
+  IZIN_DITOLAK
+}
+
 model User {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nim          String   @unique
@@ -41,6 +49,12 @@ model User {
   sentMessages     Message[]    @relation("sender")
   receivedMessages Message[]    @relation("receiver")
   ResetToken       ResetToken[]
+
+  mentorGroup MentorGroup[] @relation("group")
+
+  attendance AttendanceRecord[] @relation("attendance")
+
+  submission AssignmentSubmission[] @relation("submission")
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
@@ -92,4 +106,86 @@ model Message {
   createdAt  DateTime @default(now())
 
   @@unique([createdAt, id]) // Unique for cursor pagination
+}
+
+// Dashboard Internal
+model Group {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  group    Int
+  zoomLink String @db.VarChar(50)
+
+  mentorGroup MentorGroup[] @relation("group")
+}
+
+model MentorGroup {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mentorId String @db.Uuid
+  groupId  String @db.Uuid
+
+  mentor User  @relation("group", fields: [mentorId], references: [id])
+  group  Group @relation("group", fields: [groupId], references: [id])
+}
+
+model AttendanceRecord {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date      DateTime
+  status    Status   @default(TIDAK_HADIR)
+  reason    String   @db.Text
+  studentId String   @db.Uuid
+  eventId   String   @db.Uuid
+
+  student User            @relation("attendance", fields: [studentId], references: [id])
+  event   AttendanceEvent @relation("event", fields: [eventId], references: [id])
+}
+
+model AttendanceEvent {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String   @db.VarChar(50)
+  startTime DateTime
+  endTime   DateTime
+  dayId     String   @db.Uuid
+
+  day AttendanceDay @relation(fields: [dayId], references: [id])
+
+  record AttendanceRecord[] @relation("event")
+}
+
+model AttendanceDay {
+  id   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String   @db.VarChar(50)
+  time DateTime
+
+  event AttendanceEvent[]
+}
+
+model Assignment {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String   @db.VarChar(50)
+  filePath    String   @db.VarChar(255)
+  description String   @db.Text
+  startTime   DateTime
+  endTime     DateTime
+
+  submission AssignmentSubmission[] @relation("submission")
+}
+
+model AssignmentSubmission {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  filePath     String   @db.VarChar(255)
+  score        Int
+  createdAt    DateTime @default(now())
+  studentId    String   @db.Uuid
+  assignmentId String   @db.Uuid
+
+  student    User       @relation("submission", fields: [studentId], references: [id])
+  assignment Assignment @relation("submission", fields: [assignmentId], references: [id])
+}
+
+model ShortenedLink {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  source      String   @unique @db.VarChar(255)
+  destination String   @unique @db.VarChar(255)
+  clickCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
