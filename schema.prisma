@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["metrics", "tracing", "jsonprotocol", "extendedWhereUnique"]
+  previewFeatures = ["metrics", "tracing"]
   binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -179,4 +179,13 @@ model AssignmentSubmission {
 
   student    User       @relation("submission", fields: [studentId], references: [id])
   assignment Assignment @relation("submission", fields: [assignmentId], references: [id])
+}
+
+model ShortenedLink {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  source      String   @unique @db.VarChar(255)
+  destination String   @unique @db.VarChar(255)
+  clickCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
