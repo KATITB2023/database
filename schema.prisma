@@ -93,3 +93,22 @@ model Message {
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
+
+model attendanceEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  dayId      String   @db.Uuid
+  attendanceDay attendanceDay @relation(fields: [dayId], references: [id])
+}
+
+model attendanceDay {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date       DateTime
+
+  attendanceEvent attendanceEvent[]
+  
+}
+
+model attendanceRecord {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+}
