@@ -50,7 +50,7 @@ model User {
   receivedMessages Message[]    @relation("receiver")
   ResetToken       ResetToken[]
 
-  mentorGroup MentorGroup[] @relation("group")
+  groupRelation GroupRelation[] @relation("group")
 
   attendance AttendanceRecord[] @relation("attendance")
 
@@ -114,16 +114,16 @@ model Group {
   group    Int
   zoomLink String @db.VarChar(50)
 
-  mentorGroup MentorGroup[] @relation("group")
+  groupRelation GroupRelation[] @relation("group")
 }
 
-model MentorGroup {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  mentorId String @db.Uuid
-  groupId  String @db.Uuid
+model GroupRelation {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId  String @db.Uuid
+  groupId String @db.Uuid
 
-  mentor User  @relation("group", fields: [mentorId], references: [id])
-  group  Group @relation("group", fields: [groupId], references: [id])
+  user  User  @relation("group", fields: [userId], references: [id])
+  group Group @relation("group", fields: [groupId], references: [id])
 }
 
 model AttendanceRecord {
