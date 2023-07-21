@@ -54,7 +54,9 @@ model User {
 
   attendance AttendanceRecord[] @relation("attendance")
 
-  submission AssignmentSubmission[] @relation("submission")
+  submission  AssignmentSubmission[] @relation("submission")
+  firstMatch  UserMatch[]            @relation("firstMatch")
+  secondMatch UserMatch[]            @relation("secondMatch")
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
@@ -97,13 +99,16 @@ model Friendship {
 }
 
 model Message {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  senderId   String   @db.Uuid
-  sender     User     @relation("sender", fields: [senderId], references: [id])
-  receiverId String   @db.Uuid
-  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
-  message    String
-  createdAt  DateTime @default(now())
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  senderId    String     @db.Uuid
+  sender      User       @relation("sender", fields: [senderId], references: [id])
+  receiverId  String     @db.Uuid
+  receiver    User       @relation("receiver", fields: [receiverId], references: [id])
+  message     String
+  createdAt   DateTime   @default(now())
+  userMatchId String?    @db.Uuid
+  userMatch   UserMatch? @relation(fields: [userMatchId], references: [id])
+  isRead      Boolean    @default(false)
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
@@ -188,4 +193,28 @@ model ShortenedLink {
   clickCount  Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model UserMatch {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstUserId  String       @db.Uuid
+  firstUser    User         @relation("firstMatch", fields: [firstUserId], references: [id])
+  secondUserId String       @db.Uuid
+  secondUser   User         @relation("secondMatch", fields: [secondUserId], references: [id])
+  createdAt    DateTime     @default(now())
+  isRevelaed   Boolean      @default(true)
+  topic        String?
+  endedAt      DateTime?
+  messages     Message[]
+  ChatReport   ChatReport[]
+}
+
+model ChatReport {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userMatchId String    @db.Uuid
+  userMatch   UserMatch @relation(fields: [userMatchId], references: [id])
+  message     String
+  isResolved  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 }
