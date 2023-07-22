@@ -237,6 +237,7 @@ model ITBGotTalentRegistrant {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   scheduleId  String    @unique @db.Uuid
   teamName    String    @db.VarChar(255)
+  teamMember  String[]
   ktmPath     String    @db.VarChar(255)
   musicPath   String?   @db.VarChar(255)
   property    String?   @db.VarChar(255)
