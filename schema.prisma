@@ -34,6 +34,13 @@ enum Status {
   IZIN_DITOLAK
 }
 
+enum Lembaga {
+  HMJ
+  UKM
+  PENGMAS
+  DLL
+}
+
 model User {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nim          String   @unique
@@ -217,4 +224,34 @@ model ChatReport {
   isResolved  Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now()) @updatedAt
+}
+
+model ITBGotTalent {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  day    String    @db.VarChar(255)
+  time     String  @db.VarChar(255)
+  registrant ITBGotTalentRegistrant?
+}
+
+model ITBGotTalentRegistrant {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scheduleId  String    @unique @db.Uuid
+  teamName    String    @db.VarChar(255)
+  ktmPath     String    @db.VarChar(255)
+  musicPath   String?   @db.VarChar(255)
+  property    String?   @db.VarChar(255)
+
+  schedule ITBGotTalent @relation(fields: [scheduleId], references: [id])
+}
+
+model ShowcaseBooking {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String    @db.VarChar(255)
+  nim         String    @unique
+  lembaga     Lembaga   @default(DLL)
+  lembagaName String  @db.VarChar(255)
+  position    String    @db.VarChar(255)
+  lineId      String    @db.VarChar(255)
+  waNumber    String    @db.VarChar(255)
+  mouPath     String    @db.VarChar(255)
 }
