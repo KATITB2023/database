@@ -240,7 +240,7 @@ model ITBGotTalentRegistrant {
   teamMember String[]
   ktmPath    String   @db.VarChar(255)
   musicPath  String?  @db.VarChar(255)
-  property   String?  @db.VarChar(255)
+  property   String[]
 
   schedule ITBGotTalent @relation(fields: [scheduleId], references: [id])
 }
