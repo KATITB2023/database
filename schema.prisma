@@ -257,3 +257,9 @@ model ShowcaseBooking {
   mouPath     String   @db.VarChar(255)
   createdAt   DateTime @default(now())
 }
+
+model LocationBooking {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  token     String   @db.VarChar(50)
+  locations String[] @db.VarChar(50)
+}
