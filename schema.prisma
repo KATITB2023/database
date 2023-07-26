@@ -269,7 +269,7 @@ model LocationBooking {
 model BookedLocation {
   id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   showcaseId String @unique @db.Uuid
-  location   String @db.VarChar(50)
+  location   String @unique @db.VarChar(50)
 
   showcase ShowcaseBooking @relation(fields: [showcaseId], references: [id])
 }
