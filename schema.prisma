@@ -256,10 +256,20 @@ model ShowcaseBooking {
   waNumber    String   @db.VarChar(255)
   mouPath     String   @db.VarChar(255)
   createdAt   DateTime @default(now())
+
+  bookedLocation BookedLocation?
 }
 
 model LocationBooking {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   token     String   @db.VarChar(50)
   locations String[] @db.VarChar(50)
+}
+
+model BookedLocation {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  showcaseId String @unique @db.Uuid
+  location   String @db.VarChar(50)
+
+  showcase ShowcaseBooking @relation(fields: [showcaseId], references: [id])
 }
