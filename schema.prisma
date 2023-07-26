@@ -255,21 +255,25 @@ model ShowcaseBooking {
   lineId      String   @db.VarChar(255)
   waNumber    String   @db.VarChar(255)
   mouPath     String   @db.VarChar(255)
+  token       String?  @unique @db.VarChar(50)
   createdAt   DateTime @default(now())
 
-  bookedLocation BookedLocation?
+  locationBooking LocationBooking?
+  bookedLocation  BookedLocation?
 }
 
 model LocationBooking {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  token     String   @db.VarChar(50)
+  token     String   @unique @db.VarChar(50)
   locations String[] @db.VarChar(50)
+
+  showcase ShowcaseBooking @relation(fields: [token], references: [token])
 }
 
 model BookedLocation {
-  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  showcaseId String @unique @db.Uuid
-  location   String @unique @db.VarChar(50)
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  token    String @unique
+  location String @unique @db.VarChar(50)
 
-  showcase ShowcaseBooking @relation(fields: [showcaseId], references: [id])
+  showcase ShowcaseBooking @relation(fields: [token], references: [token])
 }
