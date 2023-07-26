@@ -258,16 +258,13 @@ model ShowcaseBooking {
   token       String?  @unique @db.VarChar(50)
   createdAt   DateTime @default(now())
 
-  locationBooking LocationBooking?
-  bookedLocation  BookedLocation?
+  bookedLocation BookedLocation?
 }
 
 model LocationBooking {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   token     String   @unique @db.VarChar(50)
   locations String[] @db.VarChar(50)
-
-  showcase ShowcaseBooking @relation(fields: [token], references: [token])
 }
 
 model BookedLocation {
