@@ -64,6 +64,7 @@ model User {
   submission  AssignmentSubmission[] @relation("submission")
   firstMatch  UserMatch[]            @relation("firstMatch")
   secondMatch UserMatch[]            @relation("secondMatch")
+  ChatReport  ChatReport[]
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
@@ -217,13 +218,15 @@ model UserMatch {
 }
 
 model ChatReport {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userMatchId String    @db.Uuid
-  userMatch   UserMatch @relation(fields: [userMatchId], references: [id])
-  message     String
-  isResolved  Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportedUserId String    @db.Uuid
+  reportedUser   User      @relation(fields: [reportedUserId], references: [id])
+  userMatchId    String    @db.Uuid
+  userMatch      UserMatch @relation(fields: [userMatchId], references: [id])
+  message        String
+  isResolved     Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
 }
 
 model ITBGotTalent {
