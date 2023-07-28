@@ -90,7 +90,7 @@ model Profile {
   instagram    String?
   visitedCount Int     @default(0)
   friendCount  Int     @default(0)
-  point        Int?
+  point        Int     @default(0)
 
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -180,11 +180,11 @@ model AttendanceDay {
 }
 
 model Assignment {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  type        AssignmentType  @default(MANDATORY)
-  title       String   @db.VarChar(50)
-  filePath    String?  @db.VarChar(255)
-  description String?  @db.Text
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type        AssignmentType @default(MANDATORY)
+  title       String         @db.VarChar(50)
+  filePath    String?        @db.VarChar(255)
+  description String?        @db.Text
   startTime   DateTime
   endTime     DateTime
 
