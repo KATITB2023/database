@@ -42,6 +42,12 @@ enum Lembaga {
   DLL
 }
 
+enum AssignmentType {
+  MANDATORY
+  DAILY_QUEST
+  SIDE_QUEST
+}
+
 model User {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nim          String   @unique
@@ -175,6 +181,7 @@ model AttendanceDay {
 
 model Assignment {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type        AssignmentType  @default(MANDATORY)
   title       String   @db.VarChar(50)
   filePath    String?  @db.VarChar(255)
   description String?  @db.Text
