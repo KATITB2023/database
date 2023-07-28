@@ -219,7 +219,7 @@ model UserMatch {
   secondUserId String       @db.Uuid
   secondUser   User         @relation("secondMatch", fields: [secondUserId], references: [id])
   createdAt    DateTime     @default(now())
-  isRevelaed   Boolean      @default(true)
+  isRevealed   Boolean      @default(true)
   topic        String?
   endedAt      DateTime?
   messages     Message[]
