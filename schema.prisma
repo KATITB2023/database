@@ -13,6 +13,7 @@ enum UserRole {
   ADMIN
   MENTOR
   STUDENT
+  EO
 }
 
 enum Gender {
@@ -83,6 +84,7 @@ model Profile {
   instagram    String?
   visitedCount Int     @default(0)
   friendCount  Int     @default(0)
+  point        Int?
 
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -174,8 +176,8 @@ model AttendanceDay {
 model Assignment {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String   @db.VarChar(50)
-  filePath    String   @db.VarChar(255)
-  description String   @db.Text
+  filePath    String?  @db.VarChar(255)
+  description String?  @db.Text
   startTime   DateTime
   endTime     DateTime
 
@@ -184,7 +186,7 @@ model Assignment {
 
 model AssignmentSubmission {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  filePath     String   @db.VarChar(255)
+  filePath     String?  @db.VarChar(255)
   score        Int?
   createdAt    DateTime @default(now())
   studentId    String   @db.Uuid
