@@ -68,10 +68,12 @@ model User {
 
   attendance AttendanceRecord[] @relation("attendance")
 
-  submission  AssignmentSubmission[] @relation("submission")
-  firstMatch  UserMatch[]            @relation("firstMatch")
-  secondMatch UserMatch[]            @relation("secondMatch")
-  ChatReport  ChatReport[]
+  submission   AssignmentSubmission[] @relation("submission")
+  firstMatch   UserMatch[]            @relation("firstMatch")
+  secondMatch  UserMatch[]            @relation("secondMatch")
+  ChatReport   ChatReport[]
+  FeedReaction FeedReaction[]
+  FeedRead     FeedRead[]
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
@@ -286,4 +288,33 @@ model BookedLocation {
   location String @unique @db.VarChar(50)
 
   showcase ShowcaseBooking @relation(fields: [token], references: [token])
+}
+
+model Feed {
+  id            Int            @id @default(autoincrement())
+  text          String
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  feedReactions FeedReaction[]
+  feedReads     FeedRead[]
+}
+
+model FeedReaction {
+  feed     Feed   @relation(fields: [feedId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+  reaction String @db.VarChar(255)
+  feedId   Int
+  userId   String @db.Uuid
+
+  @@id([feedId, userId, reaction])
+}
+
+model FeedRead {
+  feed      Feed     @relation(fields: [feedId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  feedId    Int
+  userId    String   @db.Uuid
+
+  @@id([userId, feedId])
 }
