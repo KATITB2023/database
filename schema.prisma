@@ -95,6 +95,8 @@ model Profile {
   point        Int     @default(0)
 
   updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([point(sort: Desc)])
 }
 
 model ResetToken {
@@ -221,7 +223,7 @@ model UserMatch {
   secondUserId String       @db.Uuid
   secondUser   User         @relation("secondMatch", fields: [secondUserId], references: [id])
   createdAt    DateTime     @default(now())
-  isRevealed   Boolean      @default(true)
+  isRevealed   Boolean      @default(false)
   topic        String?
   endedAt      DateTime?
   messages     Message[]
