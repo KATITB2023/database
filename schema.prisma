@@ -147,9 +147,8 @@ model StudentMentor {
 }
 
 model Group {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  group    Int
-  zoomLink String @db.VarChar(50)
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  group Int
 
   groupRelation GroupRelation[] @relation("group")
 }
