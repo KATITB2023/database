@@ -178,7 +178,7 @@ model AttendanceEvent {
 model AttendanceDay {
   id   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String   @db.VarChar(50)
-  time DateTime
+  time DateTime @db.Date
 
   event AttendanceEvent[]
 }
