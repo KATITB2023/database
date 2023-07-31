@@ -334,7 +334,7 @@ model FeedRead {
 
 model Map {
   id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  campus        String  @db.VarChar(255)
+  campus        String  @unique @db.VarChar(255)
   description   String? @db.Text
   baseLatitude  Decimal @db.Decimal(8, 6)
   baseLongitude Decimal @db.Decimal(9, 6)
@@ -344,7 +344,7 @@ model Map {
 
 model MapLocation {
   id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title         String  @db.VarChar(255)
+  title         String  @unique @db.VarChar(255)
   subtitle      String? @db.VarChar(255)
   description   String? @db.Text
   baseLatitude  Decimal @db.Decimal(8, 6)
