@@ -331,3 +331,35 @@ model FeedRead {
 
   @@id([userId, feedId])
 }
+
+model Map {
+  id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  campus        String  @db.VarChar(255)
+  description   String? @db.Text
+  baseLatitude  Decimal @db.Decimal(8, 6)
+  baseLongitude Decimal @db.Decimal(9, 6)
+
+  MapLocation MapLocation[]
+}
+
+model MapLocation {
+  id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String  @db.VarChar(255)
+  subtitle      String? @db.VarChar(255)
+  description   String? @db.Text
+  baseLatitude  Decimal @db.Decimal(8, 6)
+  baseLongitude Decimal @db.Decimal(9, 6)
+  mapId         String  @db.Uuid
+
+  Map      Map        @relation(fields: [mapId], references: [id])
+  MapPhoto MapPhoto[]
+}
+
+model MapPhoto {
+  id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  imageUrl      String  @db.VarChar(255)
+  caption       String? @db.VarChar(255)
+  mapLocationId String  @db.Uuid
+
+  MapLocation MapLocation @relation(fields: [mapLocationId], references: [id])
+}
