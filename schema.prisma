@@ -288,8 +288,6 @@ model ShowcaseBooking {
   noise         Boolean  @default(false)
   sizeKaos      String   @db.VarChar(255)
   sleeveKaos    String   @db.VarChar(255)
-  sizeLanyard   String   @db.VarChar(255)
-  sleeveLanyard String   @db.VarChar(255)
   total         Int
   method        String   @db.VarChar(255)
   mouPath       String   @db.VarChar(255)
