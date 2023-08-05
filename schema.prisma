@@ -306,7 +306,7 @@ model BookedLocation {
 model Feed {
   id            Int            @id @default(autoincrement())
   text          String
-  imageUrl      String?
+  attachmentUrl String?
   createdAt     DateTime       @default(now())
   feedReactions FeedReaction[]
   feedReads     FeedRead[]
