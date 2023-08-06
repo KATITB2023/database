@@ -282,7 +282,7 @@ model ShowcaseBooking {
   position      String   @db.VarChar(255)
   fakultas      String   @db.VarChar(255)
   jurusan       String   @db.VarChar(255)
-  angkatan      Int
+  angkatan      String   @db.VarChar(255)
   lineId        String   @db.VarChar(255)
   waNumber      String   @db.VarChar(255)
   noise         Boolean  @default(false)
