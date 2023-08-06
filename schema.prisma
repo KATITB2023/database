@@ -274,26 +274,25 @@ model ITBGotTalentRegistrant {
 }
 
 model ShowcaseBooking {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String   @db.VarChar(255)
-  nim           String   @unique
-  lembaga       Lembaga  @default(PUSAT)
-  lembagaName   String   @db.VarChar(255)
-  position      String   @db.VarChar(255)
-  fakultas      String   @db.VarChar(255)
-  jurusan       String   @db.VarChar(255)
-  angkatan      String   @db.VarChar(255)
-  lineId        String   @db.VarChar(255)
-  waNumber      String   @db.VarChar(255)
-  noise         Boolean  @default(false)
-  sizeKaos      String   @db.VarChar(255)
-  sleeveKaos    String   @db.VarChar(255)
-  total         Int
-  method        String   @db.VarChar(255)
-  mouPath       String   @db.VarChar(255)
-  proofPath     String   @db.VarChar(255)
-  token         String?  @unique @db.VarChar(50)
-  createdAt     DateTime @default(now())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @db.VarChar(255)
+  nim         String   @unique
+  lembaga     Lembaga  @default(PUSAT)
+  lembagaName String   @db.VarChar(255)
+  position    String   @db.VarChar(255)
+  fakultas    String   @db.VarChar(255)
+  jurusan     String   @db.VarChar(255)
+  angkatan    String   @db.VarChar(255)
+  lineId      String   @db.VarChar(255)
+  waNumber    String   @db.VarChar(255)
+  noise       Boolean  @default(false)
+  kaos        Json[]   @db.Json
+  total       Int
+  method      String   @db.VarChar(255)
+  mouPath     String   @db.VarChar(255)
+  proofPath   String   @db.VarChar(255)
+  token       String?  @unique @db.VarChar(50)
+  createdAt   DateTime @default(now())
 
   bookedLocation BookedLocation?
 }
