@@ -60,9 +60,13 @@ model User {
   friendInitiated Friendship[] @relation("initiator")
   friendReceived  Friendship[] @relation("receiver")
 
-  sentMessages     Message[]    @relation("sender")
-  receivedMessages Message[]    @relation("receiver")
-  ResetToken       ResetToken[]
+  sentMessages     Message[] @relation("sender")
+  receivedMessages Message[] @relation("receiver")
+
+  firstUserRoom  RoomChat[] @relation("firstUserRoom")
+  secondUserRoom RoomChat[] @relation("secondUserRoom")
+
+  ResetToken ResetToken[]
 
   student StudentMentor[] @relation("student")
   mentor  StudentMentor[] @relation("mentor")
@@ -131,6 +135,8 @@ model Message {
   createdAt   DateTime   @default(now())
   userMatchId String?    @db.Uuid
   userMatch   UserMatch? @relation(fields: [userMatchId], references: [id])
+  roomChatId  Int?
+  roomChat    RoomChat?  @relation(fields: [roomChatId], references: [id])
   isRead      Boolean    @default(false)
 
   @@unique([createdAt, id]) // Unique for cursor pagination
@@ -274,28 +280,28 @@ model ITBGotTalentRegistrant {
 }
 
 model ShowcaseBooking {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String   @db.VarChar(255)
-  nim         String   @unique
-  lembaga     Lembaga  @default(PUSAT)
-  lembagaName String   @db.VarChar(255)
-  position    String   @db.VarChar(255)
-  secondPartyName String @db.VarChar(255)
-  secondPartyPosition String @db.VarChar(255)
-  secondPartyContact String @db.VarChar(255)
-  fakultas    String   @db.VarChar(255)
-  jurusan     String   @db.VarChar(255)
-  angkatan    String   @db.VarChar(255)
-  lineId      String   @db.VarChar(255)
-  waNumber    String   @db.VarChar(255)
-  noise       Boolean  @default(false)
-  kaos        Json[]   @db.Json
-  total       Int
-  method      String   @db.VarChar(255)
-  mouPath     String   @db.VarChar(255)
-  proofPath   String   @db.VarChar(255)
-  token       String?  @unique @db.VarChar(50)
-  createdAt   DateTime @default(now())
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String   @db.VarChar(255)
+  nim                 String   @unique
+  lembaga             Lembaga  @default(PUSAT)
+  lembagaName         String   @db.VarChar(255)
+  position            String   @db.VarChar(255)
+  secondPartyName     String   @db.VarChar(255)
+  secondPartyPosition String   @db.VarChar(255)
+  secondPartyContact  String   @db.VarChar(255)
+  fakultas            String   @db.VarChar(255)
+  jurusan             String   @db.VarChar(255)
+  angkatan            String   @db.VarChar(255)
+  lineId              String   @db.VarChar(255)
+  waNumber            String   @db.VarChar(255)
+  noise               Boolean  @default(false)
+  kaos                Json[]   @db.Json
+  total               Int
+  method              String   @db.VarChar(255)
+  mouPath             String   @db.VarChar(255)
+  proofPath           String   @db.VarChar(255)
+  token               String?  @unique @db.VarChar(50)
+  createdAt           DateTime @default(now())
 
   bookedLocation BookedLocation?
 }
@@ -373,4 +379,15 @@ model MapPhoto {
   mapLocationId String  @db.Uuid
 
   MapLocation MapLocation @relation(fields: [mapLocationId], references: [id])
+}
+
+model RoomChat {
+  id           Int       @id @default(autoincrement())
+  firstUserId  String    @db.Uuid
+  secondUserId String    @db.Uuid
+  firstUser    User      @relation("firstUserRoom", fields: [firstUserId], references: [id])
+  secondUser   User      @relation("secondUserRoom", fields: [secondUserId], references: [id])
+  Message      Message[]
+
+  @@unique([firstUserId, secondUserId])
 }
