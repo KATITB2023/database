@@ -104,6 +104,7 @@ model Profile {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@index([point(sort: Desc)])
+  @@index([pin])
 }
 
 model ResetToken {
@@ -140,6 +141,10 @@ model Message {
   isRead      Boolean    @default(false)
 
   @@unique([createdAt, id]) // Unique for cursor pagination
+  @@index([userMatchId])
+  @@index([createdAt(sort: Desc)])
+  @@index([receiverId, senderId])
+  @@index([roomChatId])
 }
 
 // Dashboard Internal
@@ -178,6 +183,9 @@ model AttendanceRecord {
 
   student User            @relation("attendance", fields: [studentId], references: [id])
   event   AttendanceEvent @relation("event", fields: [eventId], references: [id])
+
+  @@unique([studentId, eventId])
+  @@index([studentId])
 }
 
 model AttendanceEvent {
@@ -222,6 +230,9 @@ model AssignmentSubmission {
 
   student    User       @relation("submission", fields: [studentId], references: [id])
   assignment Assignment @relation("submission", fields: [assignmentId], references: [id])
+
+  @@unique([studentId, assignmentId])
+  @@index([studentId])
 }
 
 model ShortenedLink {
@@ -245,6 +256,11 @@ model UserMatch {
   endedAt      DateTime?
   messages     Message[]
   ChatReport   ChatReport[]
+
+  @@index([firstUserId, secondUserId])
+  @@index([firstUserId])
+  @@index([secondUserId])
+  @@index([endedAt])
 }
 
 model ChatReport {
@@ -337,6 +353,7 @@ model FeedReaction {
   userId   String @db.Uuid
 
   @@id([feedId, userId, reaction])
+  @@index([feedId])
 }
 
 model FeedRead {
@@ -347,6 +364,7 @@ model FeedRead {
   userId    String   @db.Uuid
 
   @@id([userId, feedId])
+  @@index([feedId])
 }
 
 model Map {
