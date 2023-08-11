@@ -182,7 +182,7 @@ model AttendanceRecord {
   eventId   String   @db.Uuid
 
   student User            @relation("attendance", fields: [studentId], references: [id])
-  event   AttendanceEvent @relation("event", fields: [eventId], references: [id])
+  event   AttendanceEvent @relation("event", fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, eventId])
   @@index([studentId])
@@ -195,7 +195,7 @@ model AttendanceEvent {
   endTime   DateTime
   dayId     String   @db.Uuid
 
-  day AttendanceDay @relation(fields: [dayId], references: [id])
+  day AttendanceDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
 
   record AttendanceRecord[] @relation("event")
 }
@@ -229,7 +229,7 @@ model AssignmentSubmission {
   assignmentId String   @db.Uuid
 
   student    User       @relation("submission", fields: [studentId], references: [id])
-  assignment Assignment @relation("submission", fields: [assignmentId], references: [id])
+  assignment Assignment @relation("submission", fields: [assignmentId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, assignmentId])
   @@index([studentId])
