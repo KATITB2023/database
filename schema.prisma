@@ -409,3 +409,11 @@ model RoomChat {
 
   @@unique([firstUserId, secondUserId])
 }
+
+model Article {
+  id    String @id
+  likes Int
+  views Int
+
+  @@unique([id])
+}
