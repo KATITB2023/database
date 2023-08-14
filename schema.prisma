@@ -412,8 +412,8 @@ model RoomChat {
 
 model Article {
   id    String @id
-  likes Int
-  views Int
+  likes Int    @default(0)
+  views Int    @default(0)
 
   @@unique([id])
 }
