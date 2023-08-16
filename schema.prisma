@@ -103,7 +103,7 @@ model Profile {
 
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@index([point(sort: Desc)])
+  @@index([point(sort: Desc), name(sort: Desc)])
   @@index([pin])
 }
 
