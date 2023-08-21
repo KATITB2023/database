@@ -388,6 +388,7 @@ model UnitReward {
 
 model Merchandise {
   id    String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String
   price Int     @default(0)
   stock Int     @default(0)
   image String?
