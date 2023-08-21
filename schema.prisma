@@ -54,9 +54,12 @@ model User {
   nim          String   @unique
   passwordHash String
   role         UserRole @default(STUDENT)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now()) @updatedAt
-  profile      Profile?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  profile     Profile?
+  unitProfile UnitProfile?
 
   friendInitiated Friendship[] @relation("initiator")
   friendReceived  Friendship[] @relation("receiver")
@@ -82,7 +85,6 @@ model User {
   ChatReport   ChatReport[]
   FeedReaction FeedReaction[]
   FeedRead     FeedRead[]
-  UnitProfile  UnitProfile[]
 
   SendUnitVisit    UnitVisit[] @relation("unit")
   ReceiveUnitVisit UnitVisit[] @relation("student")
