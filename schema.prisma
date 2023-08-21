@@ -14,6 +14,7 @@ enum UserRole {
   MENTOR
   STUDENT
   EO
+  UNIT
 }
 
 enum Gender {
@@ -81,6 +82,15 @@ model User {
   ChatReport   ChatReport[]
   FeedReaction FeedReaction[]
   FeedRead     FeedRead[]
+  UnitProfile  UnitProfile[]
+
+  SendUnitVisit    UnitVisit[] @relation("unit")
+  ReceiveUnitVisit UnitVisit[] @relation("student")
+
+  SendUnitReward      UnitReward[]          @relation("sender")
+  ReceiveUnitReward   UnitReward[]          @relation("receiver")
+  MerchandiseRequest  MerchandiseRequest[]
+  MerchandiseCheckout MerchandiseCheckout[]
 
   @@unique([createdAt, id]) // Unique for cursor pagination
 }
@@ -100,6 +110,7 @@ model Profile {
   visitedCount Int     @default(0)
   friendCount  Int     @default(0)
   point        Int     @default(0)
+  coin         Int     @default(0)
 
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -329,6 +340,86 @@ model BookedLocation {
   id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   token    String @unique
   location String @unique @db.VarChar(50)
+}
+
+model UnitProfile {
+  userId       String  @id @db.Uuid
+  user         User    @relation(fields: [userId], references: [id])
+  name         String
+  lembaga      Lembaga @default(PUSAT)
+  pin          String  @unique @db.Char(6)
+  image        String?
+  bio          String  @default("")
+  visitedCount Int     @default(0)
+
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([pin])
+}
+
+model UnitVisit {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId String @db.Uuid
+  unitId    String @db.Uuid
+
+  createdAt DateTime @default(now())
+
+  student User @relation("student", fields: [studentId], references: [id])
+  unit    User @relation("unit", fields: [unitId], references: [id])
+
+  @@unique([studentId, unitId])
+}
+
+model UnitReward {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId String @db.Uuid
+  unitId    String @db.Uuid
+  reward    Int    @default(0) // Digunakan untuk audit
+
+  createdAt DateTime @default(now())
+
+  student User @relation("sender", fields: [studentId], references: [id])
+  unit    User @relation("receiver", fields: [unitId], references: [id])
+}
+
+model Merchandise {
+  id    String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  price Int     @default(0)
+  stock Int     @default(0)
+  image String?
+
+  updatedAt DateTime @default(now()) @updatedAt
+
+  MerchandiseRequest  MerchandiseRequest[]
+  MerchandiseCheckout MerchandiseCheckout[]
+}
+
+model MerchandiseRequest {
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId  String  @db.Uuid
+  merchId    String  @db.Uuid
+  isApproved Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  student User        @relation(fields: [studentId], references: [id])
+  merch   Merchandise @relation(fields: [merchId], references: [id])
+
+  @@unique([studentId, merchId])
+}
+
+model MerchandiseCheckout {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId String @db.Uuid
+  merchId   String @db.Uuid
+  amount    Int    @default(0) // Digunakan untuk audit
+
+  createdAt DateTime @default(now())
+
+  student User        @relation(fields: [studentId], references: [id])
+  merch   Merchandise @relation(fields: [merchId], references: [id])
+
+  @@unique([studentId, merchId])
 }
 
 model Feed {
