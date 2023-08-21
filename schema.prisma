@@ -79,9 +79,10 @@ model User {
 
   attendance AttendanceRecord[] @relation("attendance")
 
-  submission   AssignmentSubmission[] @relation("submission")
-  firstMatch   UserMatch[]            @relation("firstMatch")
-  secondMatch  UserMatch[]            @relation("secondMatch")
+  submission  AssignmentSubmission[] @relation("submission")
+  firstMatch  UserMatch[]            @relation("firstMatch")
+  secondMatch UserMatch[]            @relation("secondMatch")
+
   ChatReport   ChatReport[]
   FeedReaction FeedReaction[]
   FeedRead     FeedRead[]
@@ -89,8 +90,9 @@ model User {
   SendUnitVisit    UnitVisit[] @relation("unit")
   ReceiveUnitVisit UnitVisit[] @relation("student")
 
-  SendUnitReward      UnitReward[]          @relation("sender")
-  ReceiveUnitReward   UnitReward[]          @relation("receiver")
+  SendUnitReward    UnitReward[] @relation("sender")
+  ReceiveUnitReward UnitReward[] @relation("receiver")
+
   MerchandiseRequest  MerchandiseRequest[]
   MerchandiseCheckout MerchandiseCheckout[]
 
@@ -376,7 +378,7 @@ model UnitReward {
   id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   studentId String @db.Uuid
   unitId    String @db.Uuid
-  reward    Int    @default(0) // Digunakan untuk audit
+  reward    Int    @default(0) // Digunakan untuk audit (berasal dari EO)
 
   createdAt DateTime @default(now())
 
@@ -392,36 +394,35 @@ model Merchandise {
 
   updatedAt DateTime @default(now()) @updatedAt
 
-  MerchandiseRequest  MerchandiseRequest[]
-  MerchandiseCheckout MerchandiseCheckout[]
+  MerchandiseRequest MerchandiseRequest[]
 }
 
 model MerchandiseRequest {
-  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  studentId  String  @db.Uuid
-  merchId    String  @db.Uuid
-  isApproved Boolean @default(false)
+  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId       String  @db.Uuid
+  merchId         String  @db.Uuid
+  merchCheckoutId String  @db.Uuid
+  quantity        Int     @default(0)
+  isApproved      Boolean @default(false)
 
   createdAt DateTime @default(now())
 
-  student User        @relation(fields: [studentId], references: [id])
-  merch   Merchandise @relation(fields: [merchId], references: [id])
+  student       User                @relation(fields: [studentId], references: [id])
+  merch         Merchandise         @relation(fields: [merchId], references: [id])
+  merchCheckout MerchandiseCheckout @relation(fields: [merchCheckoutId], references: [id])
 
-  @@unique([studentId, merchId])
+  @@unique([studentId, merchId, merchCheckoutId])
 }
 
 model MerchandiseCheckout {
   id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   studentId String @db.Uuid
-  merchId   String @db.Uuid
-  amount    Int    @default(0) // Digunakan untuk audit
+  amount    Int    @default(0) // Digunakan untuk audit (agregat dari price * quantity)
 
   createdAt DateTime @default(now())
 
-  student User        @relation(fields: [studentId], references: [id])
-  merch   Merchandise @relation(fields: [merchId], references: [id])
-
-  @@unique([studentId, merchId])
+  student            User                 @relation(fields: [studentId], references: [id])
+  MerchandiseRequest MerchandiseRequest[]
 }
 
 model Feed {
