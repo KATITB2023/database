@@ -352,6 +352,7 @@ model UnitProfile {
   name         String
   lembaga      Lembaga @default(PUSAT)
   pin          String  @unique @db.Char(6)
+  fakultas     String?
   image        String?
   bio          String  @default("")
   visitedCount Int     @default(0)
@@ -387,11 +388,12 @@ model UnitReward {
 }
 
 model Merchandise {
-  id    String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name  String
-  price Int     @default(0)
-  stock Int     @default(0)
-  image String?
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  price       Int     @default(0)
+  stock       Int     @default(0)
+  isPublished Boolean @default(false)
+  image       String?
 
   updatedAt DateTime @default(now()) @updatedAt
 
