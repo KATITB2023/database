@@ -352,7 +352,7 @@ model UnitProfile {
   name         String
   lembaga      Lembaga @default(PUSAT)
   pin          String  @unique @db.Char(6)
-  fakultas     String?
+  group        String?
   image        String?
   bio          String  @default("")
   visitedCount Int     @default(0)
