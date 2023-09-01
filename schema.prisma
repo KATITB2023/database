@@ -477,6 +477,7 @@ model MapLocation {
   baseLatitude  Decimal @db.Decimal(8, 6)
   baseLongitude Decimal @db.Decimal(9, 6)
   mapId         String  @db.Uuid
+  logo          String? @db.VarChar(255)
 
   Map      Map        @relation(fields: [mapId], references: [id])
   MapPhoto MapPhoto[]
