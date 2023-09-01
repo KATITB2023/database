@@ -41,6 +41,7 @@ enum Lembaga {
   UKM
   BSO
   PUSAT
+  PENGMAS
 }
 
 enum AssignmentType {
